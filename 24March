@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RPG - Dragon Repeller</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game">
+        <div id="stats">
+            <span class="stat">XP: <strong><span id="xpText">0</span></strong></span>
+            <span class="stat">Health: <strong><span id="healthText">100</span></strong></span>
+            <span class="stat">Gold: <strong><span id="goldText">50</span></strong></span>
+        </div>
+        <div id="controls">
+            <button id="button1">Go to store</button>
+            <button id="button2">Go to cave</button>
+            <button id="button3">Fight dragon</button>
+        </div>
+        <div id="monsterStats">
+            <span class="stat">Monster Name: <strong><span id="monsterName"></span></strong></span>
+            <span class="stat">Health: <strong><span id="monsterHealth"></span></strong></span>
+        </div>
+        <div id="text">Welcome to Dragon Repeller. You must defeat the dragon that is preventing people from leaving the town. You are in the town square. Where do you want to go? Use the buttons above.</div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+<style>
+    body {
+        background-color: darkblue;
+    }
+
+    #text {
+        background-color: black;
+        color: white;
+        padding: 10px;
+    }
+
+    #game {
+        max-width: 500px;
+        max-height: 400px;
+        background-color: lightgray;
+        color: white;
+        margin: 0 auto;
+        padding: 10px;
+    }
+
+    #controls {
+        border: 1px black solid;
+        padding: 5px;
+    }
+
+    #stats {
+        border: 1px black solid;
+        color: black;
+        padding: 5px;
+    }
+
+    #monsterStats {
+        display: none;
+        border: 1px black solid;
+        color: white;
+        padding: 5px;
+        background-color: red;
+    }
+
+    .stat {
+        padding-right: 10px;
+    }
+</style>
+
+<script>
+    //Variables.
+    //Semicolons are optional.
+    //The naming convention is lower camel case.
+    //Let is more predictable than var.
+    //Use multiple cursors to edit multiple lines of code simultaneously.
+    //Manual selection: alt + click.
+    //Column selection: shift + alt + arrow keys.
+    //Add cursors to all occurrences: ctrl + shift + L.
+    //Initializing a variable is assigning a value to it.
+    //Declaring without initializing.
+    //Its praxis to declare at the beginning of the program.
+    //Strings are characters surrounded by quotation marks.
+    //Single or double quotation marks.
+    //Array: a list of items.
+    //Updating HTML elements requires them to be referenced. let el = document.querySelector("#elementID").A JS function used to select an element in the DOM.
+    //Var: is globally scoped. Allows for most change.
+    //Const: is globally scoped. Cannot be updated/reassigned. If the variable should never change, then declare it with const.
+    //Let: is block-scoped.
+
+    let xp = 0;
+    let health = 100;
+    let gold = 50;
+    let currentWeapon = 0;
+    let fighting;
+    let monsterHealth;
+    let inventory = ["stick"];
+
+    //Initialize buttons.
+    //Setting the onclick-property of button1.
+    //Element, event, eventhandler.
+
+    const button1 = document.querySelector("#button1");
+    const button2 = document.querySelector("#button2");
+    const button3 = document.querySelector("#button3");
+    const text = document.querySelector("#text");
+    const xpText = document.querySelector("#xpText");
+    const healthText = document.querySelector("#healthText");
+    const goldText = document.querySelector("#goldText");
+    const monsterName = document.querySelector("#monsterName");
+    const monsterHealthText = document.querySelector("#monsterHealth");
+
+    const weapons = [
+        {
+            name: "stick",
+            power: 5
+        },
+        {
+            name: "dagger",
+            power: 30
+        },
+        {
+            name: "clawhammer",
+            power: 50
+        },
+        {
+            name: "sword",
+            power: 100
+        }
+    ];
+
+
+    //An object is similar to an array but instead of using indexes to access and modify data, they use properties and consist of key-value pairs.
+    const locations = [
+        {
+            name: "town square",
+            buttonText: ["Go to store", "Go to cave", "Fight dragon"],
+            buttonFunctions: [goStore, goCave, fightDragon],
+            text: "You are in the town square. You see a sign that says \"store\"."
+        },
+        {
+            name: "store",
+            buttonText: ["Buy 10 health (10 gold)", "Buy weapon (30 gold)", "Go to town square"],
+            buttonFunctions: [buyHealth, buyWeapon, goTown],
+            text: "You enter the store."
+        },
+        {
+            name: "cave",
+            buttonText: ["Fight slime", "Fight fanged beast", "Go to town square"],
+            buttonFunctions: [fightSlime, fightBeast, goTown],
+            text: "You enter the cave. You see some monsters. "
+        }
+    ];
+
+    //Functions.
+    button1.onclick = goStore;
+    button2.onclick = goCave;
+    button3.onclick = fightDragon;
+
+
+    function update(location) {
+        //Using bracket notation to first get the specific property and then the specific element of that property's array.
+        //For accessing object property values: use dot notation if the key is a single word and bracket notation if the key is two words.
+        button1.innerText = location.buttonText[0];
+        button2.innerText = location.buttonText[1];
+        button3.innerText = location.buttonText[2];
+        button1.onclick = location.buttonFunctions[0];
+        button2.onclick = location.buttonFunctions[1];
+        button3.onclick = location.buttonFunctions[2];
+        //When the key is one word, use dot notation.
+        text.innerText = location.text;
+    }
+
+    //Pass in the first element of the locations array.
+    //In programming, counting starts at 0.
+    function goTown() {
+        update(locations[0]);
+    }
+
+    function goStore() {
+        update(locations[1]);
+    }
+
+    function goCave() {
+        console.log("going to cave");
+    }
+
+    function fightDragon() {
+        console.log("fighting dragon");
+    }
+
+    function buyHealth() {
+        //Using compound assignment operators. Subtraction assignment and addition assignment. Removing or adding value to the current value. The minus-equal-operator and the plus-equal-operator.
+        //Updating the text content of the elements.
+        //Using conditional operators in the condition of an if statement.
+        if (gold >= 10) {
+            gold -= 10;
+            health += 10;
+            goldText.innerText = gold;
+            healthText.innerText = health;
+        } else {
+            text.innerText = "You do not have enough gold to buy health. "
+        }
+    }
+
+
+    function buyWeapon() {
+        //Nested if statements. An outer and an inner.
+        //Check if the currentWeapon is less than the length of the weapons array. Useful if max weapons later needs to be updated. But because of array-indexing starting at zero, the length of the array is one less than the length of the array.
+        if (currentWeapon < weapons.length - 1) {
+            if (gold >= 30) {
+                gold -= 30;
+                //This variable is used as the weapon array index.
+                currentWeapon += 1;
+                //Getting the index from the weapons array that is the integer value of the currentWeapon.
+                let newWeapon = weapons[currentWeapon].name;
+                //Concatenating the string with the newWeapon variable.
+                text.innerText += "You now have a " + newWeapon + "."
+                //Pushing the newWeapon variable to the inventory array.
+                inventory.push(newWeapon);
+                text.innerText += "In your inventory you have: " + inventory + ".";
+            } else {
+                text.innerText = "You do not have enough gold to buy a weapon. "
+            }
+        } else {
+            text.innerText = "You already have the most powerful weapon. "
+            button2.innerText = "Sell weapon for 15 gold. "
+            button2.onclick = sellWeapon;
+        }
+    }
+
+    function sellWeapon() {
+        if (inventory.length > 1) {
+            gold += 15;
+            goldText.innerText = gold;
+            //The shift method removes the first element from the array and returns it - therefore mutating the array.
+            let currentWeapon = inventory.shift();
+            //The slice method removes the elements starting from a specified index. inventory.splice(0, 1);
+            text.innerText = "You sold a " + currentWeapon + "."
+            text.innerText += "You now have " + inventory + "."
+        } else {
+            text.innerText = "Don't sell your only weapon!"
+        }
+    }
+
+    function fightSlime() {
+        console.log("fighting slime");
+    }
+
+    function fightBeast() {
+        console.log("fighting beast");
+    }
+
+</script>
